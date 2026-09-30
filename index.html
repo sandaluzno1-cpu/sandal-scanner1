@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SANDAL BONUS — сканер</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+       font-family:-apple-system,Segoe UI,Roboto,sans-serif;text-align:center;padding:24px;box-sizing:border-box;
+       background:var(--tg-theme-bg-color,#fff);color:var(--tg-theme-text-color,#111)}
+  h1{font-size:22px;margin:0;letter-spacing:1px}
+  p{margin:0;opacity:.75}
+  button{border:0;border-radius:12px;padding:14px 22px;font-size:16px;cursor:pointer;
+         background:var(--tg-theme-button-color,#2481cc);color:var(--tg-theme-button-text-color,#fff)}
+</style>
+</head>
+<body>
+  <h1>SANDAL BONUS</h1>
+  <p id="msg">Камера очилмоқда...</p>
+  <button id="btn">📷 QR кодни сканерлаш</button>
+<script>
+  const tg = window.Telegram.WebApp;
+  const msg = document.getElementById('msg');
+  tg.ready(); tg.expand();
+
+  function scan() {
+    if (!tg.showScanQrPopup || !tg.isVersionAtLeast('6.4')) {
+      msg.textContent = 'Сканер фақат телефондаги Telegram иловасида ишлайди. Ботга QR код расмини юборинг.';
+      return;
+    }
+    msg.textContent = 'QR кодни рамкага тўғриланг';
+    tg.showScanQrPopup({ text: 'SANDAL BONUS QR кодини сканерланг' }, function (data) {
+      if (data) {
+        tg.sendData(data);   // ботга юборилади ва ойна ёпилади
+        return true;
+      }
+    });
+  }
+  tg.onEvent('scanQrPopupClosed', function () { msg.textContent = 'Қайта сканерлаш учун тугмани босинг'; });
+  document.getElementById('btn').onclick = scan;
+  scan();
+</script>
+</body>
+</html>
